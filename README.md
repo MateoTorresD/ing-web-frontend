@@ -1,35 +1,79 @@
-# React + TypeScript + Vite
+# Project Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss&logoColor=white)
+![Estado](https://img.shields.io/badge/estado-en%20desarrollo-yellow)
 
-Currently, two official plugins are available:
+Aplicación web (SPA). Consume la API REST
+[`project_api`](https://github.com/MateoTorresD/ing-web-backend).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Índice
 
-## React Compiler
+- [Características](#características)
+- [Tecnologías](#tecnologías)
+- [Requisitos](#requisitos)
+- [Instalación y ejecución](#instalación-y-ejecución)
+- [Variables de entorno](#variables-de-entorno)
+- [Scripts](#scripts)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Autor](#autor)
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Características
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+- Inicio de sesión con JWT; la sesión se persiste en el navegador.
+- Rutas protegidas: sin sesión redirige a `/auth/login`.
+- Cierre de sesión automático si la API responde `401`.
+- CRUD de usuarios (listado paginado, crear, editar y eliminar) con validación de formularios.
 
-## Expanding the Oxlint configuration
+## Tecnologías
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+- **Core:** React 19, TypeScript, Vite (con React Compiler)
+- **Estilos y UI:** Tailwind CSS 4, shadcn/ui (Base UI), lucide-react, Sonner
+- **Estado y datos:** TanStack Query, Zustand, Axios
+- **Formularios:** React Hook Form + Zod
+- **Ruteo:** React Router
+- **Lint:** Oxlint
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## Requisitos
+
+- Node.js 20.19+ (recomendado 22 LTS) y npm
+- [API](https://github.com/MateoTorresD/ing-web-backend) en ejecución
+
+## Instalación y ejecución
+
+```bash
+# 1. Clonar e instalar
+git clone https://github.com/MateoTorresD/ing-web-frontend.git
+cd ing-web-frontend
+npm install
+
+# 2. Configurar variables de entorno
+cp .env.template .env
+# editar .env (ver sección siguiente)
+
+# 3. Levantar en desarrollo
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+La app queda disponible en `http://localhost:5173`.
+Este origen debe estar incluido en `CORS_ORIGINS` del back.
+
+## Variables de entorno
+
+| Variable       | Descripción                                  | Ejemplo                     |
+| -------------- | -------------------------------------------- | --------------------------- |
+| `VITE_API_URL` | URL base de la API, **incluyendo** el `/api` | `http://localhost:3000/api` |
+
+## Scripts
+
+| Comando           | Descripción                            |
+| ----------------- | -------------------------------------- |
+| `npm run dev`     | Servidor de desarrollo con HMR         |
+| `npm run build`   | Chequeo de tipos y build de producción |
+| `npm run preview` | Sirve el build localmente              |
+
+## Autor
+
+[Mateo Torres](https://github.com/MateoTorresD)
