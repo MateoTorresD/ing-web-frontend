@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteUserAction } from "../actions/delete-user.action";
+import { changeUserStatusAction } from "../actions/change-user-status.action";
 import { usersKeys } from "../queries/users.keys";
 
-export const useDeleteUserMutation = () => {
+export const useChangeUserStatusMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: deleteUserAction,
+    mutationFn: changeUserStatusAction,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: usersKeys.lists() }),
   });
 };

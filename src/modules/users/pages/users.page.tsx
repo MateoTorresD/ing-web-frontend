@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { usePageParam } from "@/common/hooks/use-page-param";
 import { getApiErrorMessage } from "@/common/utils/get-api-error-message";
 import { useAuthStore } from "@/modules/auth/store/auth.store";
-import { DeleteUserDialog } from "../components/delete-user-dialog";
+import { ChangeUserStatusDialog } from "../components/change-user-status-dialog";
 import { UserFormDialog } from "../components/user-form-dialog";
 import { UsersTable } from "../components/users-table";
 import { useUsersQuery } from "../hooks/use-users-query";
@@ -15,11 +15,11 @@ const PAGE_SIZE = 10;
 type DialogState =
   | { type: "create" }
   | { type: "edit"; user: UserResponse }
-  | { type: "delete"; user: UserResponse }
+  | { type: "status"; user: UserResponse }
   | null;
 
 export const UsersPage = () => {
-  const { page, setPage } = usePageParam();
+  const { page } = usePageParam();
   const currentUserUuid = useAuthStore((s) => s.user?.uuid);
   const [dialog, setDialog] = useState<DialogState>(null);
 
@@ -29,11 +29,6 @@ export const UsersPage = () => {
   });
 
   const closeDialog = () => setDialog(null);
-
-  // If the deleted user was the only one on the page, go back one page.
-  const handleDeleted = () => {
-    if (data?.data.length === 1 && page > 1) setPage(page - 1);
-  };
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-4 p-4">
@@ -66,7 +61,7 @@ export const UsersPage = () => {
           users={data.data}
           currentUserUuid={currentUserUuid}
           onEdit={(user) => setDialog({ type: "edit", user })}
-          onDelete={(user) => setDialog({ type: "delete", user })}
+          onToggleStatus={(user) => setDialog({ type: "status", user })}
         />
       )}
 
@@ -76,12 +71,8 @@ export const UsersPage = () => {
         <UserFormDialog user={dialog.user} onClose={closeDialog} />
       )}
 
-      {dialog?.type === "delete" && (
-        <DeleteUserDialog
-          user={dialog.user}
-          onClose={closeDialog}
-          onDeleted={handleDeleted}
-        />
+      {dialog?.type === "status" && (
+        <ChangeUserStatusDialog user={dialog.user} onClose={closeDialog} />
       )}
     </main>
   );

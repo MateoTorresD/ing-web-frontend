@@ -1,4 +1,4 @@
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, UserCheck, UserX } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,14 +15,14 @@ interface Props {
   users: UserResponse[];
   currentUserUuid?: string;
   onEdit: (user: UserResponse) => void;
-  onDelete: (user: UserResponse) => void;
+  onToggleStatus: (user: UserResponse) => void;
 }
 
 export const UsersTable = ({
   users,
   currentUserUuid,
   onEdit,
-  onDelete,
+  onToggleStatus,
 }: Props) => {
   return (
     <Table>
@@ -33,13 +33,14 @@ export const UsersTable = ({
           <TableHead>Last name</TableHead>
           <TableHead>Username</TableHead>
           <TableHead>E-mail</TableHead>
+          <TableHead>Status</TableHead>
           <TableHead className="w-24 text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {users.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={6} className="text-center text-muted-foreground">
+            <TableCell colSpan={7} className="text-center text-muted-foreground">
               No users found.
             </TableCell>
           </TableRow>
@@ -51,6 +52,17 @@ export const UsersTable = ({
               <TableCell>{user.person.lastName}</TableCell>
               <TableCell>{user.username}</TableCell>
               <TableCell>{user.email}</TableCell>
+              <TableCell>
+                <span
+                  className={
+                    user.isActive
+                      ? "rounded-md bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary"
+                      : "rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
+                  }
+                >
+                  {user.isActive ? "Active" : "Inactive"}
+                </span>
+              </TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-1">
                   <Button
@@ -64,11 +76,11 @@ export const UsersTable = ({
                   <Button
                     variant="ghost"
                     size="icon-sm"
-                    aria-label={`Delete ${user.username}`}
+                    aria-label={`${user.isActive ? "Deactivate" : "Activate"} ${user.username}`}
                     disabled={user.uuid === currentUserUuid}
-                    onClick={() => onDelete(user)}
+                    onClick={() => onToggleStatus(user)}
                   >
-                    <Trash2 />
+                    {user.isActive ? <UserX /> : <UserCheck />}
                   </Button>
                 </div>
               </TableCell>
