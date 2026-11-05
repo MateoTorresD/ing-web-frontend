@@ -1,5 +1,7 @@
+import type { RoleName } from "../enums/role-name.enum";
+
 export interface RoleResponse {
   uuid: string;
-  name: string;
+  name: RoleName;
   description: string;
 }
