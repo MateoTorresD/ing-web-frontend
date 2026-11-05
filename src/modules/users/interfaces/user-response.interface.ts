@@ -1,3 +1,5 @@
+import type { RoleName } from "@/modules/roles/enums/role-name.enum";
+
 export interface UserResponse {
   uuid: string;
   username: string;
@@ -5,7 +7,7 @@ export interface UserResponse {
   isActive: boolean;
   role: {
     uuid: string;
-    name: string;
+    name: RoleName;
   };
   person: {
     firstName: string;
