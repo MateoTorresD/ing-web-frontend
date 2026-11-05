@@ -17,6 +17,7 @@ const sharedShape = {
     .trim()
     .pipe(z.email("Invalid e-mail"))
     .pipe(z.string().max(255)),
+  roleUuid: z.uuid("Select a role"),
 };
 
 export const createUserFormSchema = z.object({

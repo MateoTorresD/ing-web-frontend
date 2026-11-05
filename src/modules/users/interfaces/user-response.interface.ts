@@ -3,6 +3,10 @@ export interface UserResponse {
   username: string;
   email: string;
   isActive: boolean;
+  role: {
+    uuid: string;
+    name: string;
+  };
   person: {
     firstName: string;
     middleName: string | null;
