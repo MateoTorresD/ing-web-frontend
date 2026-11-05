@@ -1,10 +1,19 @@
 import type { ReactNode } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { getRoleLabel } from "@/modules/roles/constants/role-labels";
+import { useRolesQuery } from "@/modules/roles/hooks/use-roles-query";
 import type { UserResponse } from "../interfaces/user-response.interface";
 import {
   createUserFormSchema,
@@ -36,9 +45,15 @@ const Field = ({ id, label, error, children }: FieldProps) => (
 
 export const UserForm = ({ user, isPending, onSubmit, onCancel }: Props) => {
   const isEdit = user !== undefined;
+  const {
+    data: roles = [],
+    isPending: isLoadingRoles,
+    isError: isRolesError,
+  } = useRolesQuery();
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<UserFormValues>({
@@ -49,6 +64,7 @@ export const UserForm = ({ user, isPending, onSubmit, onCancel }: Props) => {
       lastName: user?.person.lastName ?? "",
       username: user?.username ?? "",
       email: user?.email ?? "",
+      roleUuid: user?.role.uuid ?? "",
       password: "",
     },
   });
@@ -59,7 +75,11 @@ export const UserForm = ({ user, isPending, onSubmit, onCancel }: Props) => {
       className="flex flex-col gap-4"
       noValidate
     >
-      <Field id="firstName" label="First name" error={errors.firstName?.message}>
+      <Field
+        id="firstName"
+        label="First name"
+        error={errors.firstName?.message}
+      >
         <Input
           id="firstName"
           aria-invalid={!!errors.firstName}
@@ -104,6 +124,46 @@ export const UserForm = ({ user, isPending, onSubmit, onCancel }: Props) => {
           aria-invalid={!!errors.email}
           {...register("email")}
         />
+      </Field>
+
+      <Field id="roleUuid" label="Role" error={errors.roleUuid?.message}>
+        <Controller
+          name="roleUuid"
+          control={control}
+          render={({ field }) => (
+            <Select
+              items={roles.map((role) => ({
+                value: role.uuid,
+                label: getRoleLabel(role.name),
+              }))}
+              value={field.value || null}
+              onValueChange={(value) => field.onChange(value ?? "")}
+              disabled={isLoadingRoles || isRolesError}
+            >
+              <SelectTrigger
+                id="roleUuid"
+                className="w-full"
+                aria-invalid={!!errors.roleUuid}
+              >
+                <SelectValue
+                  placeholder={
+                    isLoadingRoles ? "Loading roles..." : "Select a role"
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {roles.map((role) => (
+                  <SelectItem key={role.uuid} value={role.uuid}>
+                    {getRoleLabel(role.name)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+        {isRolesError && (
+          <p className="text-sm text-destructive">Failed to load roles.</p>
+        )}
       </Field>
 
       {!isEdit && (

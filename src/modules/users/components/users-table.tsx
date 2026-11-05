@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getRoleLabel } from "@/modules/roles/constants/role-labels";
 import type { UserResponse } from "../interfaces/user-response.interface";
 
 interface Props {
@@ -33,6 +34,7 @@ export const UsersTable = ({
           <TableHead>Last name</TableHead>
           <TableHead>Username</TableHead>
           <TableHead>E-mail</TableHead>
+          <TableHead>Role</TableHead>
           <TableHead>Status</TableHead>
           <TableHead className="w-24 text-right">Actions</TableHead>
         </TableRow>
@@ -40,7 +42,7 @@ export const UsersTable = ({
       <TableBody>
         {users.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={7} className="text-center text-muted-foreground">
+            <TableCell colSpan={8} className="text-center text-muted-foreground">
               No users found.
             </TableCell>
           </TableRow>
@@ -52,6 +54,7 @@ export const UsersTable = ({
               <TableCell>{user.person.lastName}</TableCell>
               <TableCell>{user.username}</TableCell>
               <TableCell>{user.email}</TableCell>
+              <TableCell>{getRoleLabel(user.role.name)}</TableCell>
               <TableCell>
                 <span
                   className={
